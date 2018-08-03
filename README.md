@@ -1,8 +1,8 @@
 # JSRap
 
-[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
-
 A Node.js module to wrap existing library functions with custom code.
+
+[![experimental](http://badges.github.io/stability-badges/dist/experimental.svg)](http://github.com/badges/stability-badges)
 
 ## Installation
 
