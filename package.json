@@ -1,0 +1,27 @@
+{
+  "name": "jswrap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theBenForce/function-wrapper.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "Ben Force",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/theBenForce/function-wrapper/issues"
+  },
+  "homepage": "https://github.com/theBenForce/function-wrapper#readme",
+  "devDependencies": {
+    "typescript": "^3.0.1"
+  }
+}
