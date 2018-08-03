@@ -7,7 +7,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "coverage": "jest --coverage"
+    "cover": "jest --coverage"
   },
   "repository": {
     "type": "git",
