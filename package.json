@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/theBenForce/function-wrapper#readme",
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "typescript": "^3.0.1"
   }
 }
