@@ -4,16 +4,15 @@ node_js:
 cache: npm
 install:
   - npm install
-script:
-  - npm run build
-  - npm run cover
-
 
 jobs:
   include:
+    - stage: "Build"
+      name: "Build Typescript"
+      script: npm run build
     - stage: "Tests"
       name: "Unit Tests"
-      script: npm test
+      script: npm run cover
     - stage: npm release
       if: tag IS blank
       node_js: stable
