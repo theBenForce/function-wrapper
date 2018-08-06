@@ -1,2 +1,6 @@
 lib/
 coverage/
+__tests__/
+.travis.yml
+.jest.config.js
+tsconfig.json
