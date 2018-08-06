@@ -2,5 +2,5 @@ lib/
 coverage/
 __tests__/
 .travis.yml
-.jest.config.js
+jest.config.js
 tsconfig.json
