@@ -8,11 +8,11 @@ function cleanWrapperMethods(methods: Array<CounterFunction>) {
 }
 
 interface Options {
-  before: CounterFunction;
-  after: Function;
-  exceptionHandler: Function;
-  filterResults: Function;
-  removeBefore: number;
+  before?: CounterFunction;
+  after?: Function;
+  exceptionHandler?: Function;
+  filterResults?: Function;
+  removeBefore?: number;
 }
 
 interface CounterFunction {
