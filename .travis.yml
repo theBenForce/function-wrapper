@@ -11,6 +11,8 @@ jobs:
     - stage: "Tests"
       name: "Unit Tests"
       script: npm run cover
+      after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
+
     - stage: npm release
       if: tag IS blank
       node_js: stable
@@ -26,6 +28,7 @@ jobs:
         tag: next
         on:
           branch: master
+          
     - stage: npm latest release
       if: tag IS present
       node_js: stable
@@ -41,5 +44,3 @@ jobs:
         tag: latest
         on:
           tags: true
-
-after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
