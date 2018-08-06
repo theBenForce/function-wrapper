@@ -83,7 +83,7 @@ export function FunctionWrapper(original: any, options: Options): Function {
     newMethod = function(this: any) {
       original.callCount++;
 
-      var args = new Array(arguments);
+      var args = Array.prototype.slice.call(arguments);
       let result: any;
 
       original.wrapperOptions.before.forEach((before: CounterFunction) => {
