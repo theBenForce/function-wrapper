@@ -1,6 +1,6 @@
 function cleanWrapperMethods(methods: Array<CounterFunction>) {
   for (var i = 0; i < methods.length; i++) {
-    if (methods[i].toDelete) {
+    if (methods[i] && methods[i].toDelete) {
       delete methods[i];
       i--;
     }
