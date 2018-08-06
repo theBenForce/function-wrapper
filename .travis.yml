@@ -14,19 +14,6 @@ jobs:
       after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
 
     - stage: npm release
-      if: tag IS blank
-      node_js: stable
-      deploy:
-        provider: npm
-        email: "$NPM_EMAIL"
-        api_key: "$NPM_TOKEN"
-        skip_cleanup: true
-        tag: next
-        on:
-          branch: master
-
-    - stage: npm latest release
-      if: tag IS present
       node_js: stable
       deploy:
         provider: npm
@@ -35,4 +22,4 @@ jobs:
         skip_cleanup: true
         tag: latest
         on:
-          branch: master
+          tags: true
