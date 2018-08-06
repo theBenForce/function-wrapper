@@ -86,10 +86,7 @@ export function FunctionWrapper(original: any, options: Options): Function {
       var args = new Array(arguments);
       let result: any;
 
-      original.wrapperOptions.before.forEach(function(
-        this: any,
-        before: CounterFunction
-      ) {
+      original.wrapperOptions.before.forEach((before: CounterFunction) => {
         args = before.apply(this, args);
 
         if (before.removeAfter && before.removeAfter >= original.callCount) {
@@ -110,19 +107,15 @@ export function FunctionWrapper(original: any, options: Options): Function {
         );
       }
 
-      original.wrapperOptions.after.forEach(function(
-        this: any,
-        after: Function
-      ) {
+      original.wrapperOptions.after.forEach((after: Function) => {
         result = after.apply(this, args) || result;
       });
 
-      original.wrapperOptions.filterResults.forEach(function(
-        this: any,
-        filterResults: Function
-      ) {
-        result = filterResults.call(this, result);
-      });
+      original.wrapperOptions.filterResults.forEach(
+        (filterResults: Function) => {
+          result = filterResults.call(this, result);
+        }
+      );
 
       return result;
     };
