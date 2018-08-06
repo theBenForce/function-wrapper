@@ -43,13 +43,26 @@ function createWrapperOptions(): WrapperOptions {
  * @param {String} method The method to be modified
  * @param {Options} options An object containing before, after, filterResults, and/or exceptionHandler methods.
  */
-export default function FunctionWrapper(
+export function PrototypeWrapper(
   target: any,
   method: string,
   options: Options
 ) {
   const original = target.prototype[method];
 
+  if (!original) {
+    throw `Target does not contain method ${method}`;
+  }
+
+  target.prototype[method] = FunctionWrapper(original, options);
+}
+
+/**
+ * Executes code before or after the given method.
+ * @param {*} target The function to be extended
+ * @param {Options} options An object containing before, after, filterResults, and/or exceptionHandler methods.
+ */
+export function FunctionWrapper(original: any, options: Options): Function {
   options = options || {};
   var before = options.before;
   var exceptionHandler = options.exceptionHandler;
@@ -60,22 +73,23 @@ export default function FunctionWrapper(
     before.removeAfter = options.removeBefore;
   }
 
-  if (!original) {
-    throw `Target does not contain method ${method}`;
-  }
+  var newMethod = original;
 
   if (!original.wrapperOptions) {
     original.wrapperOptions = createWrapperOptions();
 
     original.callCount = 0;
 
-    target.prototype[method] = function() {
+    newMethod = function(this: any) {
       original.callCount++;
 
       var args = new Array(arguments);
       let result: any;
 
-      original.wrapperOptions.before.forEach((before: CounterFunction) => {
+      original.wrapperOptions.before.forEach(function(
+        this: any,
+        before: CounterFunction
+      ) {
         args = before.apply(this, args);
 
         if (before.removeAfter && before.removeAfter >= original.callCount) {
@@ -96,15 +110,19 @@ export default function FunctionWrapper(
         );
       }
 
-      original.wrapperOptions.after.forEach((after: Function) => {
+      original.wrapperOptions.after.forEach(function(
+        this: any,
+        after: Function
+      ) {
         result = after.apply(this, args) || result;
       });
 
-      original.wrapperOptions.filterResults.forEach(
-        (filterResults: Function) => {
-          result = filterResults.call(this, result);
-        }
-      );
+      original.wrapperOptions.filterResults.forEach(function(
+        this: any,
+        filterResults: Function
+      ) {
+        result = filterResults.call(this, result);
+      });
 
       return result;
     };
@@ -125,4 +143,6 @@ export default function FunctionWrapper(
   if (filterResults) {
     original.wrapperOptions.filterResults.push(filterResults);
   }
+
+  return newMethod;
 }

@@ -13,10 +13,10 @@ npm i jsrap
 ## Usage
 
 ```javascript
-var FunctionWrapper = require("jsrap");
+var { PrototypeWrapper } = require("jsrap");
 var Target = require("some-class");
 
-FunctionWrapper(Target, "someMethod", {
+PrototypeWrapper(Target, "someMethod", {
   before() {
     console.info("Executed before someMethod");
   },

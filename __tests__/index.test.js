@@ -1,6 +1,6 @@
 jest.disable;
 
-const FunctionWrapper = require("../dist/index").default;
+const { PrototypeWrapper } = require("../dist/index");
 
 class Target {}
 var original = jest.fn();
@@ -9,13 +9,13 @@ Target.prototype.original = function() {
 };
 
 test("wrapping unknown method to throw an exception", () => {
-  expect(() => FunctionWrapper(Target, "something")).toThrow();
+  expect(() => PrototypeWrapper(Target, "something")).toThrow();
 });
 
 test("before method should be run before function", () => {
   var before = jest.fn(() => expect(original.mock.calls.length).toEqual(0));
 
-  FunctionWrapper(Target, "original", { before });
+  PrototypeWrapper(Target, "original", { before });
 
   var target = new Target();
   target.original();
@@ -29,7 +29,7 @@ test("after method should be run after function", () => {
     expect(original.mock.calls.length).toEqual(1);
   });
 
-  FunctionWrapper(Target, "original", { after });
+  PrototypeWrapper(Target, "original", { after });
 
   var target = new Target();
   target.original();
@@ -46,7 +46,7 @@ test("exceptionHandler method should be run when an exception is thrown", () => 
 
   var exceptionHandler = jest.fn();
 
-  FunctionWrapper(Target, "originalException", { exceptionHandler });
+  PrototypeWrapper(Target, "originalException", { exceptionHandler });
 
   var target = new Target();
   target.originalException();
@@ -57,7 +57,7 @@ test("exceptionHandler method should be run when an exception is thrown", () => 
 test("filter results method should be run after function", () => {
   var filterResults = jest.fn();
 
-  FunctionWrapper(Target, "original", { filterResults });
+  PrototypeWrapper(Target, "original", { filterResults });
 
   var target = new Target();
   target.original();
