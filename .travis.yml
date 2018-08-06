@@ -35,4 +35,4 @@ jobs:
         skip_cleanup: true
         tag: latest
         on:
-          tags: true
+          branch: master
