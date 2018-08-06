@@ -4,12 +4,10 @@ node_js:
 cache: npm
 install:
   - npm install
+  - npm run build
 
 jobs:
   include:
-    - stage: "Build"
-      name: "Build Typescript"
-      script: npm run build
     - stage: "Tests"
       name: "Unit Tests"
       script: npm run cover
