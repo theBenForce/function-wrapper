@@ -102,7 +102,7 @@ export function FunctionWrapper(original: any, options: Options): Function {
       } catch (ex) {
         original.wrapperOptions.exceptionHandler.forEach(
           (exceptionHandler: Function) => {
-            exceptionHandler.apply(this, args.concat([ex]));
+            result = exceptionHandler.apply(this, args.concat([ex]));
           }
         );
       }
