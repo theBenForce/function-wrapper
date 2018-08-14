@@ -10,7 +10,7 @@ export default function createFunction(original: any) {
       var args = Array.prototype.slice.call(arguments);
       let result: any;
       args = runPreMethods.call(this, wrapperOptions, args, callCount);
-      result = runOriginal.call(this, result, original, args, wrapperOptions);
+      result = runOriginal.call(this, original, args, wrapperOptions);
       result = runPostMethods.call(this, wrapperOptions, result, args);
       return result;
     };
@@ -40,11 +40,12 @@ function createWrapperOptions(): WrapperOptions {
 
 function runOriginal(
   this: any,
-  result: any,
   original: any,
   args: any,
   wrapperOptions: WrapperOptions
 ) {
+  let result: any;
+
   try {
     result = original.apply(this, args);
   } catch (ex) {
