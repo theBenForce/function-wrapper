@@ -21,39 +21,39 @@ function createWrapperOptions(): WrapperOptions {
 export default function createFunction(original: any) {
   var newMethod = original;
   if (!original.wrapperOptions) {
+    var wrapperOptions = createWrapperOptions();
+    var callCount = 0;
     newMethod = function(this: any) {
-      original.callCount++;
+      callCount++;
       var args = Array.prototype.slice.call(arguments);
       let result: any;
-      original.wrapperOptions.before.forEach((before: CounterFunction) => {
+      wrapperOptions.before.forEach((before: CounterFunction) => {
         args = before.apply(this, args);
-        if (before.removeAfter && before.removeAfter >= original.callCount) {
+        if (before.removeAfter && before.removeAfter >= callCount) {
           before.toDelete = true;
         }
       });
-      cleanWrapperMethods(original.wrapperOptions.before);
+      cleanWrapperMethods(wrapperOptions.before);
       args = args || arguments;
       try {
         result = original.apply(this, args);
       } catch (ex) {
-        original.wrapperOptions.exceptionHandler.forEach(
+        wrapperOptions.exceptionHandler.forEach(
           (exceptionHandler: Function) => {
             result = exceptionHandler.apply(this, args.concat([ex]));
           }
         );
       }
-      original.wrapperOptions.after.forEach((after: Function) => {
+      wrapperOptions.after.forEach((after: Function) => {
         result = after.apply(this, args) || result;
       });
-      original.wrapperOptions.filterResults.forEach(
-        (filterResults: Function) => {
-          result = filterResults.call(this, result);
-        }
-      );
+      wrapperOptions.filterResults.forEach((filterResults: Function) => {
+        result = filterResults.call(this, result);
+      });
       return result;
     };
-    newMethod.wrapperOptions = createWrapperOptions();
-    newMethod.callCount = 0;
+    newMethod.wrapperOptions = wrapperOptions;
+    newMethod.callCount = callCount;
   }
   return newMethod;
 }
