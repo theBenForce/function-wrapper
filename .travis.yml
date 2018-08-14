@@ -1,3 +1,6 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=2c5ed842164f672133fdf7cf1013183c0b1de5a45a54fc9141231b1864aa6e07
 language: node_js
 node_js:
   - stable
@@ -10,8 +13,14 @@ jobs:
   include:
     - stage: "Tests"
       name: "Unit Tests"
+      before_script:
+        - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        - chmod +x ./cc-test-reporter
+        - ./cc-test-reporter before-build
       script: npm run cover
-      after_script: "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
+      after_script:
+        - "cat coverage/lcov.info | node_modules/coveralls/bin/coveralls.js"
+        - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
     - stage: npm release
       node_js: stable
