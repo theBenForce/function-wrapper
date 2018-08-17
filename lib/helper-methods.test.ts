@@ -1,4 +1,4 @@
-import createFunction from "../dist/helper-methods";
+import createFunction from "./helper-methods";
 
 describe("Helper Methods", () => {
   test("proper arguments are passed to original", () => {
@@ -20,6 +20,7 @@ describe("Helper Methods", () => {
 
     var newFunction = createFunction(original);
     newFunction.wrapperOptions.exceptionHandler.push(handleEx);
+    newFunction.wrapperOptions.before.push(jest.fn());
 
     newFunction(1);
     expect(handleEx).toHaveBeenCalledWith(1, "something went wrong");

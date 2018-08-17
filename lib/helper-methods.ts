@@ -64,13 +64,13 @@ function runPreMethods(
   callCount: number
 ) {
   wrapperOptions.before.forEach((before: CounterFunction) => {
-    args = before.apply(this, args);
+    args = before.apply(this, args) || args;
     if (before.removeAfter && before.removeAfter >= callCount) {
       before.toDelete = true;
     }
   });
   cleanWrapperMethods(wrapperOptions.before);
-  args = args || arguments;
+
   return args;
 }
 
