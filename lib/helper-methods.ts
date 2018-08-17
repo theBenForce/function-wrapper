@@ -49,8 +49,9 @@ function runOriginal(
   try {
     result = original.apply(this, args);
   } catch (ex) {
+    var exArgs = args.concat([ex]);
     wrapperOptions.exceptionHandler.forEach((exceptionHandler: Function) => {
-      result = exceptionHandler.apply(this, args.concat([ex]));
+      result = exceptionHandler.apply(this, exArgs);
     });
   }
   return result;
