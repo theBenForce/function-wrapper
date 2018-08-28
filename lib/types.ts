@@ -8,7 +8,7 @@ export interface Options {
 }
 
 export interface CounterFunction {
-  (): any;
+  (...args: any[]): any;
   removeAfter?: number;
   toDelete?: boolean;
 }
