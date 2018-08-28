@@ -1,4 +1,4 @@
-import { Options, CounterFunction, WrapperOptions } from "./types";
+import { Options } from "./types";
 import createFunction from "./helper-methods";
 
 /**
@@ -27,33 +27,8 @@ export function PrototypeWrapper(
  * @param {Options} options An object containing before, after, filterResults, and/or exceptionHandler methods.
  */
 export function FunctionWrapper(original: any, options: Options): Function {
-  options = options || {};
-  var before = options.before;
-  var exceptionHandler = options.exceptionHandler;
-  var after = options.after;
-  var filterResults = options.filterResults;
-
-  if (before && options.removeBefore) {
-    before.removeAfter = options.removeBefore;
-  }
-
   var newMethod = createFunction(original);
-
-  if (before) {
-    newMethod.wrapperOptions.before.push(before);
-  }
-
-  if (exceptionHandler) {
-    newMethod.wrapperOptions.exceptionHandler.push(exceptionHandler);
-  }
-
-  if (after) {
-    newMethod.wrapperOptions.after.push(after);
-  }
-
-  if (filterResults) {
-    newMethod.wrapperOptions.filterResults.push(filterResults);
-  }
+  newMethod.extend(options);
 
   return newMethod;
 }

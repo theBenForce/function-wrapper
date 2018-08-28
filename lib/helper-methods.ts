@@ -1,26 +1,79 @@
-import { CounterFunction, WrapperOptions } from "./types";
+import {
+  CounterFunction,
+  WrapperOptions,
+  WrapperFunction,
+  WrapperParameters,
+  Options
+} from "./types";
 
-export default function createFunction(original: any) {
-  var newMethod = original;
-  if (!original.wrapperOptions) {
-    var wrapperOptions = createWrapperOptions();
-    var callCount = 0;
-    newMethod = function(this: any) {
-      callCount++;
-      var args = Array.prototype.slice.call(arguments);
-      let result: any;
-      args = runPreMethods.call(this, wrapperOptions, args, callCount);
-      result = runOriginal.call(this, original, args, wrapperOptions);
-      result = runPostMethods.call(this, wrapperOptions, result, args);
-      return result;
-    };
-    newMethod.wrapperOptions = wrapperOptions;
-    newMethod.callCount = callCount;
+function isWrapperFunction(
+  original: Function | WrapperFunction
+): original is WrapperFunction {
+  return (<WrapperFunction>original).params !== undefined;
+}
+
+export default function createFunction(
+  original: Function | WrapperFunction
+): WrapperFunction {
+  if (isWrapperFunction(original)) {
+    return original;
   }
+  var params = <WrapperParameters>{
+    wrapperOptions: createWrapperOptions(),
+    callCount: 0,
+    original
+  };
+
+  let newMethod = <WrapperFunction>createExecutor(params, original);
+  newMethod.extend = createExtendor(params.wrapperOptions);
+  newMethod.params = params;
+
   return newMethod;
 }
 
-function cleanWrapperMethods(methods: Array<CounterFunction>) {
+function smartCopy(
+  source: Options,
+  wrapperOptions: WrapperOptions,
+  name: string
+) {
+  var x = source[name];
+
+  if (!x) {
+    return;
+  }
+
+  if (Array.isArray(x)) {
+    for (var y of x) {
+      wrapperOptions[name].push(y);
+    }
+  } else {
+    wrapperOptions[name].push(x);
+  }
+}
+
+export function createExtendor(wrapperOptions: WrapperOptions) {
+  return (options: Options): void => {
+    for (var name of ["before", "exceptionHandler", "after", "filterResults"]) {
+      smartCopy(options, wrapperOptions, name);
+    }
+  };
+}
+
+export function createExecutor(
+  params: WrapperParameters,
+  original: Function
+): (...args: any[]) => any {
+  return function(this: any, ...args: any[]) {
+    params.callCount++;
+    let result: any;
+    args = runPreMethods.call(this, params, args);
+    result = runOriginal.call(this, params, args);
+    result = runPostMethods.call(this, params, args, result);
+    return result;
+  };
+}
+
+export function cleanWrapperMethods(methods: Array<CounterFunction>) {
   for (var i = 0; i < methods.length; i++) {
     if (methods[i] && methods[i].toDelete) {
       delete methods[i];
@@ -29,7 +82,7 @@ function cleanWrapperMethods(methods: Array<CounterFunction>) {
   }
 }
 
-function createWrapperOptions(): WrapperOptions {
+export function createWrapperOptions(): WrapperOptions {
   return {
     before: [],
     exceptionHandler: [],
@@ -38,13 +91,10 @@ function createWrapperOptions(): WrapperOptions {
   };
 }
 
-function runOriginal(
-  this: any,
-  original: any,
-  args: any,
-  wrapperOptions: WrapperOptions
-) {
+export function runOriginal(this: any, params: WrapperParameters, args: any) {
   let result: any;
+  let original = params.original;
+  let wrapperOptions = params.wrapperOptions;
 
   try {
     result = original.apply(this, args);
@@ -57,12 +107,13 @@ function runOriginal(
   return result;
 }
 
-function runPreMethods(
+export function runPreMethods(
   this: any,
-  wrapperOptions: WrapperOptions,
+  params: WrapperParameters,
   args: any,
   callCount: number
 ) {
+  let wrapperOptions = params.wrapperOptions;
   wrapperOptions.before.forEach((before: CounterFunction) => {
     args = before.apply(this, args) || args;
     if (before.removeAfter && before.removeAfter >= callCount) {
@@ -74,12 +125,14 @@ function runPreMethods(
   return args;
 }
 
-function runPostMethods(
+export function runPostMethods(
   this: any,
-  wrapperOptions: WrapperOptions,
+  params: WrapperParameters,
   result: any,
   args: any
 ) {
+  let wrapperOptions = params.wrapperOptions;
+
   wrapperOptions.after.forEach((after: Function) => {
     result = after.apply(this, args) || result;
   });

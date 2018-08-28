@@ -1,22 +1,34 @@
-interface Options {
-  before?: CounterFunction;
-  after?: Function;
-  exceptionHandler?: Function;
-  filterResults?: Function;
-  removeBefore?: number;
+export interface Options {
+  before?: CounterFunction | Array<CounterFunction>;
+  after?: CounterFunction | Array<CounterFunction>;
+  exceptionHandler?: CounterFunction | Array<CounterFunction>;
+  filterResults?: CounterFunction | Array<CounterFunction>;
+  removeBefore?: CounterFunction | Array<CounterFunction>;
+  [key: string]: Array<CounterFunction> | CounterFunction | undefined;
 }
 
-interface CounterFunction {
+export interface CounterFunction {
   (): any;
   removeAfter?: number;
   toDelete?: boolean;
 }
 
-interface WrapperOptions {
+export interface WrapperOptions {
   before: Array<CounterFunction>;
-  exceptionHandler: Array<Function>;
-  after: Array<Function>;
-  filterResults: Array<Function>;
+  exceptionHandler: Array<CounterFunction>;
+  after: Array<CounterFunction>;
+  filterResults: Array<CounterFunction>;
+  [key: string]: Array<CounterFunction>;
 }
 
-export { Options, CounterFunction, WrapperOptions };
+export interface WrapperParameters {
+  wrapperOptions: WrapperOptions;
+  callCount: number;
+  original: any;
+}
+
+export interface WrapperFunction {
+  (...args: any[]): any;
+  extend(options: Options): void;
+  params?: WrapperParameters;
+}

@@ -5,7 +5,6 @@ describe("Helper Methods", () => {
     var original = jest.fn();
 
     var newFunction = createFunction(original);
-    newFunction.wrapperOptions;
 
     newFunction(1, 2, 3);
 
@@ -19,8 +18,8 @@ describe("Helper Methods", () => {
     var handleEx = jest.fn();
 
     var newFunction = createFunction(original);
-    newFunction.wrapperOptions.exceptionHandler.push(handleEx);
-    newFunction.wrapperOptions.before.push(jest.fn());
+    newFunction.params.wrapperOptions.exceptionHandler.push(handleEx);
+    newFunction.params.wrapperOptions.before.push(jest.fn());
 
     newFunction(1);
     expect(handleEx).toHaveBeenCalledWith(1, "something went wrong");

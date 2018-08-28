@@ -1,12 +1,15 @@
 jest.disable;
 
-const { PrototypeWrapper } = require("../dist/index");
+import { PrototypeWrapper } from "./index";
 
-class Target {}
+class Target {
+  original: (...args: any[]) => any;
+  originalException: (...args: any[]) => any;
+
+  constructor() {}
+}
 var original = jest.fn();
-Target.prototype.original = function() {
-  original();
-};
+Target.prototype.original = original;
 
 test("wrapping unknown method to throw an exception", () => {
   expect(() => PrototypeWrapper(Target, "something")).toThrow();
