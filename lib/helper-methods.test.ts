@@ -18,8 +18,10 @@ describe("Helper Methods", () => {
     var handleEx = jest.fn();
 
     var newFunction = createFunction(original);
-    newFunction.params.wrapperOptions.exceptionHandler.push(handleEx);
-    newFunction.params.wrapperOptions.before.push(jest.fn());
+    newFunction.extend({
+      exceptionHandler: handleEx,
+      before: jest.fn()
+    });
 
     newFunction(1);
     expect(handleEx).toHaveBeenCalledWith("something went wrong", 1);
