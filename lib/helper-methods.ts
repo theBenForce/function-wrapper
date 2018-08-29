@@ -99,9 +99,9 @@ export function runOriginal(this: any, params: WrapperParameters, args: any) {
   try {
     result = original.apply(this, args);
   } catch (ex) {
-    var exArgs = args.concat([ex]);
+    var exArgs = [ex].concat(args);
     wrapperOptions.exceptionHandler.forEach((exceptionHandler: Function) => {
-      result = exceptionHandler.apply(this, exArgs);
+      result = exceptionHandler.apply(this, exArgs) || result;
     });
   }
   return result;
