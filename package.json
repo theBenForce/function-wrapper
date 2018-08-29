@@ -14,7 +14,10 @@
     "url": "git+https://github.com/theBenForce/function-wrapper.git"
   },
   "keywords": [
-    "nodejs"
+    "nodejs",
+    "typescript",
+    "injection",
+    "javascript"
   ],
   "author": "Ben Force",
   "license": "MIT",

@@ -25,3 +25,23 @@ PrototypeWrapper(Target, "someMethod", {
   }
 });
 ```
+
+## Methods
+
+All of the following methods may be passed in the options object.
+
+### `before(...args: any[]): any[]`
+
+The before method is called with all of the arguments of the original function passed in. Your implementation must either return the arguments array, or `void`.
+
+### `exceptionHandler(exception: any, ...args: any[]): any`
+
+This method is called whenever an exception is thrown by the original method. It's return value is saved as the method result if it's not `void`.
+
+### `after(...args: any[]): any`
+
+This method is called after the original method has completed. All of the original arguments are passed to it, and it can return `void` or some other value that will be used as the method result. If `void` is returned, the previous result value is saved.
+
+### `filterResults(result: any): any`
+
+Allows you to modify the results before returning. Whatever is returned from this function is used as the final result.
