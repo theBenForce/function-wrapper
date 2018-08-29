@@ -22,6 +22,6 @@ describe("Helper Methods", () => {
     newFunction.params.wrapperOptions.before.push(jest.fn());
 
     newFunction(1);
-    expect(handleEx).toHaveBeenCalledWith(1, "something went wrong");
+    expect(handleEx).toHaveBeenCalledWith("something went wrong", 1);
   });
 });
