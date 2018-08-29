@@ -71,6 +71,8 @@ export class WrapperOptions {
     result = this.runMethods(HandlerNames.After, self, args) || result;
     result =
       this.runMethods(HandlerNames.FilterResults, self, [result]) || result;
+
+    return result;
   }
 
   private runMethods(
