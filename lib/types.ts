@@ -81,10 +81,11 @@ export class WrapperOptions {
     args: any[]
   ): any | any[] {
     let result: any;
+    const handlers = this.handlers[handler];
 
-    this.handlers[handler].forEach(
-      h => (result = h.apply(self, args) || result)
-    );
+    for (const handler of handlers) {
+      result = handler.apply(self, args) || result;
+    }
 
     return result;
   }
