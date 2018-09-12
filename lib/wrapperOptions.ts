@@ -73,9 +73,11 @@ export default class WrapperOptions {
   }
 
   extend(options: Options): void {
-    for (var name of Object.values(HandlerNames)) {
-      this.appendHandlers(name, options[name]);
-    }
+    Object.values(HandlerNames).forEach((name: HandlerNames) => {
+      this.appendHandlers(name, options[name] as
+        | CounterFunction
+        | Array<CounterFunction>);
+    });
   }
 
   cleanupMethods(callCount: number): void {
