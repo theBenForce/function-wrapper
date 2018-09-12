@@ -1,4 +1,4 @@
-import { Options } from "./types";
+import { Options, WrapperFunction } from "./types";
 import createFunction from "./helper-methods";
 
 /**
@@ -26,8 +26,11 @@ export function PrototypeWrapper(
  * @param {*} target The function to be extended
  * @param {Options} options An object containing before, after, filterResults, and/or exceptionHandler methods.
  */
-export function FunctionWrapper(original: any, options: Options): Function {
-  var newMethod = createFunction(original);
+export function FunctionWrapper(
+  original: any,
+  options: Options
+): WrapperFunction {
+  var newMethod = createFunction(original, options.async);
   newMethod.extend(options);
 
   return newMethod;
